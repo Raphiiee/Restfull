@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using Restfull.Structs;
 
 namespace Restfull
 {
@@ -24,11 +23,11 @@ namespace Restfull
                 server.Start();
 
                 // Buffer for reading data
-                Byte[] bytes = new Byte[256];
+                Byte[] bytes = new Byte[300000];
                 String data = null;
 
                 List<string> messageQue = new List<string>();
-                TcpClass tcp = new TcpClass();
+                Server tcp = new Server();
 
                 // Enter the listening loop.
                 while (true)
@@ -55,10 +54,11 @@ namespace Restfull
                         // Translate data bytes to a ASCII string.
                         data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
                         data = data.ToUpper();
-                        Console.WriteLine("Received: {0}", data);
+                        Console.WriteLine("*******Received*******");
+                        //Console.WriteLine("Received: {0}", data);
 
                         // Process the data sent by the client.
-                        
+
 
                         tcp.GetData(data);
 
@@ -81,14 +81,14 @@ namespace Restfull
                             else if (tcp.GetMethod() == "POST")
                             {
                                 tcp.AppendMessage(messageQue);
-                                Console.WriteLine("POST THAT!");
+                                //Console.WriteLine("POST THAT!");
                             }
                             else if (tcp.GetMethod() == "PUT")
                             {
                                 if (tcp.GetPath().Contains("/MESSAGES/"))
                                 {
                                     tcp.UpdateMessage(messageQue);
-                                    Console.WriteLine("PUT THAT !");
+                                    //Console.WriteLine("PUT THAT !");
                                 }
                                 else
                                 {
@@ -99,7 +99,7 @@ namespace Restfull
                             else if (tcp.GetMethod() == "DELETE")
                             {
                                 tcp.DeleteMessage(messageQue);
-                                Console.WriteLine("DELETE THAT !");
+                                //Console.WriteLine("DELETE THAT !");
                             }
 
                         }
@@ -114,7 +114,10 @@ namespace Restfull
                         stream.Write(reply, 0, reply.Length);
                         //writer.Write("\r\n");
                         stream.Flush();
+                        Console.WriteLine("*******Received*******");
+                        Console.WriteLine("-------  SENT  -------");
                         Console.WriteLine("Sent: {0}", tcp.GetHeader());
+                        Console.WriteLine("-------  SENT  -------");
 
                     }
 
